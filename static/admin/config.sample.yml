@@ -1,0 +1,185 @@
+local_backend: true
+
+# backend:
+#   name: "git-gateway"
+#   branch: "main" # Branch to update (optional; defaults to master)
+
+backend:
+  name: github
+  branch: main
+  repo: coastal-science/coastal-science.github.io
+  base_url: https://orca-dev.research.sfu.ca
+  commit_messages:
+    create: "Create {{collection}} “{{slug}}”"
+    update: "Update {{collection}} “{{slug}}”"
+    delete: "Delete {{collection}} “{{slug}}”"
+    uploadMedia: "Upload “{{path}}”"
+    deleteMedia: "Delete “{{path}}”"
+  squash_merges: true
+
+publish_mode: editorial_workflow
+
+display_url: https://orca.research.sfu.ca
+logo_url: https://orca.research.sfu.ca/img/logo.png
+
+media_folder: "static/img"
+public_folder: "/img"
+
+collections:
+- name: "main_page"
+  label: "Main page and About"
+  folder: "content"
+  create: true
+  editor:
+    preview: false
+  preview_path: "{{slug}}"
+  summary: "{{title}}"
+  fields:
+  - { label: 'Title', name: 'title', widget: 'string' }
+  - { label: 'Description', name: 'description', widget: 'string', required: False, hint: 'Used for the site listing multiple subpages. If blank, this is populated from the first 100 characters from the page entry.' }
+  - { label: 'Publish Date', name: 'date', widget: 'datetime' }
+  # - { label: 'Weight', name: 'weight', widget: 'number', value_type: 'int', hint: 'Controls the position of a page within a collection that is sorted by weight. Assign weights using non-zero integers. Lighter items are ranked higher, while heavier items are ranked lower. Unweighted or zero-weighted elements are placed ahead of other items.' }
+
+  - { label: 'ID', name: 'id', widget: 'string', hint: 'Add a unique id so that it is available in the dropdown menu.' }
+
+  - { label: 'Body', name: 'body', widget: 'markdown' }
+
+- name: "carousel"
+  label: "Carousel Images"
+  folder: "data/carousel"
+  extension: "yaml"
+  create: true
+  editor:
+    preview: false
+  summary: "{{title}} - {{description | truncate(20, '...')}}"
+  fields:
+  - { label: 'Weight', name: 'weight', widget: 'number', value_type: 'int', required: False, hint: 'Controls the position of a page within a collection that is sorted by weight. Assign weights using non-zero integers. Lighter items are ranked higher, while heavier items are ranked lower. Unweighted or zero-weighted elements are placed ahead of other items.' }
+  - { label: 'Title', name: 'title', widget: 'string', pattern: [ '^[a-zA-Z0-9-\s]+$', 'Only letters, numbers, hyphen (-) and spaces are allowed.' ] }
+  - { label: 'Description', name: 'description', widget: 'text', required: False, hint: 'Raw html is accepted: `<p> Our whale forecast system uses ...</p>`' }
+
+  - { label: 'Text position', name: 'position', widget: 'select', default: 'top-left', options: [ '', 'centered', 'top-left', 'top-right', 'bottom-left', 'bottom-right' ], hint: 'Select the relative position of the text description overlapping the image. The blank/empty entry means that the text does not overlap with image and is placed underneath the image.' }
+  - { label: 'Text justification', name: 'textalign', widget: 'select', default: 'left', options: [ 'left', 'right' ], hint: 'Select the justification of the text.' }
+
+  - { label: 'Image', name: 'image', widget: 'image', required: False, hint: 'image (img/LucyShipBreach.png)' }
+  - { label: 'Photo Credits', name: 'photocredits', widget: 'string', required: False, hint: 'Provide image credits here or leave blank. The prefix "_Photo Credits:_" will be added.' }
+  - { label: 'URL', name: 'href', widget: 'string', required: False, hint: 'Page or URL that redirects to more information about the featured item. e.g. applications/call-catalogue/ or research/publications/' }
+
+- name: "features"
+  label: "Featured items"
+  folder: "data/features"
+  extension: "yaml"
+  create: true
+  slug: "{{name}}"
+  editor:
+    preview: false
+  summary: "{{name}} - {{description | truncate(20, '...')}}"
+  fields:
+  # - { label: 'Title', name: 'name', widget: 'string' }
+  - { label: 'Weight', name: 'weight', widget: 'number', value_type: 'int', required: False, hint: 'Controls the position of a page within a collection that is sorted by weight. Assign weights using non-zero integers. Lighter items are ranked higher, while heavier items are ranked lower. Unweighted or zero-weighted elements are placed ahead of other items.' }
+  - { label: 'Name', name: 'name', widget: 'string', hint: 'Name of the featured item', pattern: [ '^[a-zA-Z0-9-\s]+$', 'Only letters, numbers, hyphen (-) and spaces are allowed.' ] }
+
+  - { label: 'Icon', name: 'icon', widget: 'string', required: False, hint: 'Fork Awesome icon https://forkaweso.me/Fork-Awesome/icons/. e.g. `fa fa-users`' }
+  - { label: 'Thumbnail image', name: 'thumbnail', widget: 'image', required: False, hint: '`Thumbnail` supersedes the `icon` field. e.g. image (img/LucyShipBreach.png)' }
+  - { label: 'URL', name: 'url', widget: 'string', required: False, hint: 'Page or URL that redirects to more information about the featured item. e.g. applications/call-catalogue/ or research/publications/' }
+
+  - { label: 'Description', name: 'description', widget: 'markdown', required: False, hint: 'Description under the featured item icon.' }
+
+- name: "partners"
+  label: "Partners"
+  folder: "data/clients"
+  extension: "yaml"
+  create: true
+  slug: "{{name}}"
+  media_folder: "/static/img/clients/HALLO partner logos"
+  public_folder: "/img/clients/HALLO partner logos"
+  editor:
+    preview: false
+  fields:
+  - { label: 'Name', name: 'name', widget: 'string', hint: 'Name of the Partner' }
+  - { label: 'Logo', name: 'image', widget: 'image', hint: 'Thumbnail image for publication entry.' }
+  - { label: 'URL', name: 'url', widget: 'string', hint: 'URL that redirects to the partner site', pattern: [ '^https?:\/\/\w+(\.\w+)+.*$', 'Must be an http(s) url.' ] }
+
+- name: "applications"
+  label: "Applications"
+  folder: "content/applications"
+  create: true
+  editor:
+    preview: false
+  preview_path: "applications/{{slug}}"
+  summary: "{{title | strings.Title}}"
+  fields:
+  - { label: 'Title', name: 'title', widget: 'string' }
+  - { label: 'Publish Date', name: 'date', widget: 'datetime' }
+  - { label: 'Weight', name: 'weight', widget: 'number', value_type: 'int', required: False, hint: 'Controls the position of a page within a collection that is sorted by weight. Assign weights using non-zero integers. Lighter items are ranked higher, while heavier items are ranked lower. Unweighted or zero-weighted elements are placed ahead of other items.' }
+
+  - { label: 'Thumbnail', name: 'thumbnail', widget: 'image', required: False }
+  - { label: 'Photo Credits', name: 'photocredits', widget: 'string', required: False, hint: 'Provide image credits here or leave blank. The prefix "_Photo Credits:_" will be added.' }
+  - { label: 'Thumbnail URL', name: 'thumbnailurl', widget: 'string', required: False, hint: 'Redirect url for the thumbnail image', pattern: [ '^https?:\/\/\w+(\.\w+)+.*$', 'Must be an http(s) url.' ] }
+
+  - { label: 'Description', name: 'description', widget: 'string', required: False, hint: 'Used for the page listing multiple subpages. If blank, this is populated from the first 100 characters from the page entry.' }
+
+  - { label: 'Body', name: 'body', widget: 'markdown' }
+
+- name: "research"
+  label: "Research"
+  folder: "content/research"
+  create: true
+  editor:
+    preview: false
+  preview_path: "research/{{slug}}"
+  summary: "{{title | title}} [{{id}}] – {{description | truncate(40,'...')}} {{body | truncate(150, '...')}}"
+  fields:
+  - { label: 'Title', name: 'title', widget: 'string' }
+  - { label: 'Publish Date', name: 'date', widget: 'datetime' }
+  - { label: 'Weight', name: 'weight', widget: 'number', value_type: 'int', required: False, hint: 'Controls the position of a page within a collection that is sorted by weight. Assign weights using non-zero integers. Lighter items are ranked higher, while heavier items are ranked lower. Unweighted or zero-weighted elements are placed ahead of other items.' }
+
+  - { label: 'ID', name: 'id', widget: 'string', hint: 'Add a unique id so that it is available in the dropdown menu.' }
+  - { label: 'Description', name: 'description', widget: 'string', required: False, hint: 'Used for the page listing multiple subpages. If blank, this is populated from the first 100 characters from the page entry.' }
+
+  - { label: 'Body', name: 'body', widget: 'markdown' }
+
+- name: "research_publications"
+  label: "Research Publications"
+  folder: "content/research/publications"
+  create: true
+  editor:
+    preview: false
+  preview_path: "research/publications/{{slug}}"
+  summary: "{{title | title}} ({{date | date('YYYY')}}) {{journal}} - {{ authors }}"
+  fields:
+  - { label: 'Title', name: 'title', widget: 'string' }
+  - { label: 'Publish Date', name: 'date', widget: 'datetime' }
+  # - { label: 'Weight', name: 'weight', widget: 'number', value_type: 'int', hint: 'Controls the position of a page within a collection that is sorted by weight. Assign weights using non-zero integers. Lighter items are ranked higher, while heavier items are ranked lower. Unweighted or zero-weighted elements are placed ahead of other items.' }
+  - { label: 'Authors', name: 'authors', widget: 'list', hint: 'Separate multiple entries with a comma (,). Use the mail icon ✉️ for corresponding authors.' }
+
+  - { label: 'Publication', name: 'journal', widget: 'string', hint: 'Journal Name, etc. Use markdown for formatting and hyperlinks.' }
+
+  - { label: 'Thumbnail image', name: 'image', widget: 'image', hint: 'Thumbnail image for partner entry.' }
+  - { label: 'DOI', name: 'doi', required: False, widget: 'string', hint: 'Document Object Identifier. Use markdown for formatting and hyperlinks.' }
+  - { label: 'Publication URL', name: 'publicationurl', widget: 'string', hint: 'URL that redirects to the publication', pattern: [ '^https?:\/\/\w+(\.\w+)+.*$', 'Must be an http(s) url.' ] }
+
+  - { label: 'Body', name: 'body', widget: 'markdown' }
+
+- name: "blog"
+  label: "Latest News/Blog/Post"
+  folder: "content/blog"
+  create: true
+  slug: "{{slug}}-{{year}}-{{month}}-{{day}}"
+  editor:
+    preview: false
+  preview_path: "blog/{{slug}}"
+  summary: "{{title | title}} - {{ authors }} {{date | date('YYYY-MM-DD')}} - {{body | truncate(20, '...')}}"
+  fields:
+  - { label: 'Title', name: 'title', widget: 'string' }
+  - { label: 'Publish Date', name: 'date', widget: 'datetime' }
+  # - { label: 'Description', name: 'description', widget: 'string' }
+  - { label: 'Tags', name: 'tags', widget: 'list', hint: 'Separate multiple entries with a comma (,)' }
+  - { label: 'Categories', name: 'categories', widget: 'list', hint: 'Separate multiple entries with a comma (,)' }
+
+  - { label: 'Banner image', name: 'banner', widget: 'image', required: False, hint: '' }
+  - { label: 'Banner Alignment', name: 'banner_align', widget: 'select', required: False, default: '', options: [ '', 'wrap-left', 'wrap-right' ], hint: 'Select the position around the thumbnail images that the text should wrap around. The blank/empty entry means that there is no wrapping.' }
+
+  - { label: 'Authors', name: 'authors', widget: 'list', hint: 'Separate multiple entries with a comma (,)' }
+  - { label: 'Summary', name: 'summary', widget: 'text', required: False, hint: 'Used for the page listing multiple posts. If blank, this is populated from the first 100 characters from the post.' }
+
+  - { label: 'Body', name: 'body', widget: 'markdown' }
