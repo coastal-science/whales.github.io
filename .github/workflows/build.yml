@@ -1,0 +1,52 @@
+# Sample workflow for building and deploying a Hugo site to GitHub Pages
+name: Build/deploy Pages/Production
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main", "bootstrap-repo", "gha-"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  SERVICE: "${{ vars.SERVICE }}"
+  CONTAINER_PROJECT: "whales.github.io" # "rcg-containers" # repo name
+  WEB_URL: "${{ secrets.DOMAIN_NAME }}"
+
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+# Default to bash
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  generate-timestamp:
+    permissions: {}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set TIMESTAMP
+        id: date
+        run: |
+             export DATE=$(date +'%Y%m%d-%H%M%S')
+             echo "TIMESTAMP=$DATE" >> $GITHUB_ENV
+    outputs:
+      TIMESTAMP: ${{ env.TIMESTAMP }}
+
+
+  call-workflow-passing-data:
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+      pages: write
+    uses: coastal-science/coastal-science.github.io/.github/workflows/pages-gh.yml@gha-patch-reusable-workflow
+
+    # with:
+      # config-path: .github/labeler.yml
+    secrets: inherit
