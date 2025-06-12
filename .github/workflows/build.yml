@@ -1,4 +1,5 @@
-# Sample workflow for building and deploying a Hugo site to GitHub Pages
+# Reuse a workflow of another repository in the organization: 
+# Build and deploy a Hugo site to GitHub Pages & Docker/Nomad
 name: Build/deploy Pages/Production
 
 on:
@@ -11,13 +12,12 @@ on:
 
 env:
   SERVICE: "${{ vars.SERVICE }}"
-  CONTAINER_PROJECT: "whales.github.io" # "rcg-containers" # repo name
+  # CONTAINER_PROJECT: "whales.github.io" # "rcg-containers" # repo name dynamically extracted from `github.respository` by removing `github.owner`
   WEB_URL: "${{ secrets.DOMAIN_NAME }}"
-
 
 # Allow one concurrent deployment
 concurrency:
-  group: "pages"
+  group: ${{ github.repository }}-whale-pages
   cancel-in-progress: true
 
 # Default to bash
@@ -30,23 +30,30 @@ jobs:
     permissions: {}
     runs-on: ubuntu-latest
     steps:
-      - name: Set TIMESTAMP
+      - name: Set TIMESTAMP and get REPO_NAME
         id: date
         run: |
              export DATE=$(date +'%Y%m%d-%H%M%S')
+             REPO_NAME=${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}
              echo "TIMESTAMP=$DATE" >> $GITHUB_ENV
+             echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
     outputs:
       TIMESTAMP: ${{ env.TIMESTAMP }}
-
-
+      REPO_NAME: ${{ env.REPO_NAME }}
+      
   call-workflow-passing-data:
+    needs:
+      - generate-timestamp
     permissions:
       contents: write
       packages: write
       id-token: write
       pages: write
+      deployments: read
+    # strategy:
+    #   matrix:
+    #     target: [github-pages, docker-image]
     uses: coastal-science/coastal-science.github.io/.github/workflows/pages-gh.yml@gha-patch-reusable-workflow
-
     # with:
-      # config-path: .github/labeler.yml
+    #   target: ${{ matrix.target }}
     secrets: inherit
