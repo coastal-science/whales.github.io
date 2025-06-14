@@ -1,5 +1,5 @@
-# Reuse a workflow of another repository in the organization: 
-# Build and deploy a Hugo site to GitHub Pages & Docker/Nomad
+# Reuse a workflow of another repository in the same organization: 
+# Build and deploy a Hugo site to GitHub Pages & to cloud Docker/Nomad
 name: Build/deploy Pages/Production
 
 on:
@@ -13,14 +13,14 @@ on:
 # env:
 #   # CONTAINER_PROJECT: "whales.github.io" # "rcg-containers" # repo name dynamically extracted from `github.respository` by removing `github.owner`
 
-# Allow one concurrent deployment
+# Allow one concurrent deployment. Ensure the group is different than the reusable workflow concurrency group
 concurrency:
   group: ${{ github.repository }}-whale-pages
   cancel-in-progress: true
 
 jobs:
   generate-timestamp:
-    permissions: {}
+    permissions: {} 
     runs-on: ubuntu-latest
     steps:
       - name: Set TIMESTAMP and get REPO_NAME
@@ -45,3 +45,4 @@ jobs:
       deployments: read
     uses: coastal-science/coastal-science.github.io/.github/workflows/pages-gh.yml@gha-patch-reusable-workflow
     secrets: inherit
+
