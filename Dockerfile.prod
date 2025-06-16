@@ -1,4 +1,4 @@
-
+ARG USER=nginx
 FROM nginx:alpine
 COPY --from=public --chown=$USER:$USER . /usr/share/nginx/html
 COPY --from=nginx --chown=nginx:nginx . /etc/nginx/
