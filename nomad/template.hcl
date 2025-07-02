@@ -41,6 +41,7 @@ job "${__SERVICE__}-${__ENVIRONMENT__}" {
       driver = "${__JOB_DRIVER__}"
       config {
         image = "${__IMAGE_NAME__}:${__IMAGE_TAG__}"
+        force_pull = "${__IMAGE_FORCE_PULL__}"
         ports = ["http"]
         # auth {
         #   username = "${__USERNAME__}"
