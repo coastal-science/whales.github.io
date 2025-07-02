@@ -1,0 +1,17 @@
+services:
+  website:
+    environment:
+      - HUGO_BASEURL=${HUGO_BASEURL}
+    build:
+      # context: https://github.com/coastal-science/coastal-science.github.io.git
+      context: .
+      additional_contexts:
+        public: ./public
+        nginx: ./nginx
+      dockerfile: Dockerfile.prod
+      # platforms:
+      #   - "linux/amd64"
+
+    image: website
+    ports:
+      - 8800:80

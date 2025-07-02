@@ -1,0 +1,35 @@
+services:
+ 
+  decap-cms:
+    #   platform: "linux/amd64"
+    image: itsmejoeeey/docker-decap-cms-standalone:latest
+    ports:
+      - "9980:80"
+      - "9930:3000"
+    restart: unless-stopped
+    environment:
+      - ORIGINS=${ORIGINS}
+      - OAUTH_CLIENT_ID=${OAUTH_GITHUB_CLIENT_ID}
+      - OAUTH_CLIENT_SECRET=${OAUTH_GITHUB_CLIENT_SECRET}
+    depends_on:
+      - website
+
+  website:
+    environment:
+      - HUGO_BASEURL=${HUGO_BASEURL}
+    build:
+      # context: https://github.com/coastal-science/whales.github.io.git
+      context: .
+      additional_contexts:
+        public: ./public
+        nginx: ./nginx
+      dockerfile: Dockerfile
+      # platforms:
+      #   - "linux/amd64"
+    volumes:
+      - ./nginx/conf.d/server.conf:/etc/nginx/conf.d/server.conf
+      - ./nginx/conf.d/decap.conf:/etc/nginx/default.d/decap.conf
+
+    # image: ${REGISTRY}/${IMAGE_NAME}:${DATE}_${TYPE_OF_BUILD-development}
+    ports:
+      - 8800:80

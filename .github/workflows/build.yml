@@ -1,0 +1,48 @@
+# Reuse a workflow of another repository in the same organization: 
+# Build and deploy a Hugo site to GitHub Pages & to cloud Docker/Nomad
+name: Build/deploy Pages/Production
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main", "bootstrap-repo", "gha-"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# env:
+#   # CONTAINER_PROJECT: "whales.github.io" # "rcg-containers" # repo name dynamically extracted from `github.respository` by removing `github.owner`
+
+# Allow one concurrent deployment. Ensure the group is different than the reusable workflow concurrency group
+concurrency:
+  group: ${{ github.repository }}-whale-pages
+  cancel-in-progress: true
+
+jobs:
+  generate-timestamp:
+    permissions: {} 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set TIMESTAMP and get REPO_NAME
+        id: date
+        run: |
+             export DATE=$(date +'%Y%m%d-%H%M%S')
+             REPO_NAME=${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}
+             echo "TIMESTAMP=$DATE" >> $GITHUB_ENV
+             echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
+    outputs:
+      TIMESTAMP: ${{ env.TIMESTAMP }}
+      REPO_NAME: ${{ env.REPO_NAME }}
+      
+  call-workflow-passing-data:
+    needs:
+      - generate-timestamp
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+      pages: write
+      deployments: read
+    uses: coastal-science/coastal-science.github.io/.github/workflows/pages-gh.yml@gha-patch-reusable-workflow
+    secrets: inherit
+
