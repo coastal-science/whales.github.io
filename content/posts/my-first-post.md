@@ -9,3 +9,5 @@ date: 2025-06-11T15:38:54-07:00
 This is **bold** text, and this is *emphasized* text.
 
 Visit the [Hugo](https://gohugo.io) website!
+
+#### References
