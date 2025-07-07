@@ -1,0 +1,6 @@
+weight: 3
+name: "Forecast Models"
+icon: "fa fa-funkwhale"
+thumbnail: img/IconForecast80.png
+url: "applications/forecast-models/"
+description: "Forecast whale locations based on hydrophone detections, visual observations from citizen science groups, and environmental data."

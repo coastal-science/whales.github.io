@@ -1,0 +1,10 @@
+<div class="{{ .Get "class" }}">
+    <h3>Researchers</h3>
+    {{ range .Site.Data.Workshop.bioacoustics2022.info.talks }}
+        | Workshop session | {{ .time }} |<br>
+        | Presenter | {{ .presenter }} |<br>
+        | {{ .title }} | < youtube {{ .youtube_id }} youtube > |<br>
+        | | |
+        <hr>
+    {{ end }}
+</div>

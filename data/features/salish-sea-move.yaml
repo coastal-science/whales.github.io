@@ -1,0 +1,6 @@
+weight: 7
+name: "Salish Sea Move"
+icon: ""
+thumbnail: img/salish-sea-move.png
+url: https://rutherfordjoy.shinyapps.io/SalishSeaMove/
+description: "Predict the movement of Southern Resident Killer Whales in the Salish Sea as the observations become available in real-time."

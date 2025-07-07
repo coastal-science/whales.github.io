@@ -1,0 +1,7 @@
+<figure>
+    <img src="{{ .Get "url" }}" class="img-responsive {{ .Get "class" }}" alt="{{ .Get "description" }}">
+    <figcaption class="fig-caption">
+        {{ with .Params.credit }}<div class="photo-credit">Photo Credits: {{ . | markdownify }}</div> {{ end }}
+        {{ with .Params.description }}<div class="description">{{ . | markdownify }}</div> {{ end }}
+    </figcaption>
+</figure>

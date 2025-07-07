@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+
+  <head>
+    {{ partial "headers.html" . }}
+    {{ partial "custom_headers.html" . }}
+  </head>
+
+  <body>
+
+    <div id="all">
+
+        {{ partial "top.html" . }}
+
+        {{ partial "nav.html" . }}
+
+        {{ partial "breadcrumbs.html" . }}
+
+        <div id="content" class="">
+          <div class="container pt-4 pt-md-10 pb-4 pb-md-10">
+
+              <div class="row justify-content-start">
+                
+                    <!-- *** LEFT COLUMN *** -->
+
+                    <div class="col-12 col-md-8" id="research-post">
+
+                        <div id="post-content" class="post-content justified-text">
+                          {{ .Content }}
+                        </div>
+                        <!-- /#post-content -->
+            
+                    </div>
+            
+                    <!-- *** LEFT COLUMN END *** -->
+
+                    
+                </div>
+                <!-- /.row -->
+
+            </div>
+            <!-- /.container -->
+        </div>
+        <!-- /#content -->
+
+        {{ partial "footer.html" . }}
+
+    </div>
+    <!-- /#all -->
+
+    {{ partial "scripts.html" . }}
+
+  </body>
+</html>

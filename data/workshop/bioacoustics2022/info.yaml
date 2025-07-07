@@ -1,0 +1,115 @@
+name: "SFU-HALLO 2022 Bioacoustics"
+talks:
+- title: Overview of the Forecast Framework and Challenges
+  presenter: Ruth Joy
+  time: Early morning Aug 31
+  video_url: https://youtu.be/3fao7Gtlckw
+  youtube_id: 3fao7Gtlckw
+
+- title: Southern Gulf Islands Whale Sighting Network
+  presenter: Lucy Quayle/Susie Washington-Smyth
+  time: Early morning Aug 31
+  video_url: https://youtu.be/5s-qSV8-raY
+  youtube_id: 5s-qSV8-raY
+
+- title: Tracking Orcas in Washingtons Inland Waters
+  presenter: Monika Wieland
+  time: Early morning Aug 31
+  video_url: https://youtu.be/BFn2HibmELc
+  youtube_id: BFn2HibmELc
+
+- title: Overview Elements of Acoustic Whale Detection
+  presenter: Mike Dowd
+  time: Early morning Aug 31
+  video_url: https://youtu.be/8siJ-kEmwtY
+  youtube_id: 8siJ-kEmwtY
+
+- title: The Good, the Bad and the Ugly of Hydrophone Data
+  presenter: Harald Yurk
+  time: Late morning Aug 31
+  video_url: https://youtu.be/sk74dD7Dfyc
+  youtube_id: sk74dD7Dfyc
+
+- title: Evaluation of the Coastal Acoustic Buoy for Offshore Wind
+  presenter: Kaitlin Palmer
+  time: Late morning Aug 31
+  video_url: https://youtu.be/37tLBSHxzWk
+  youtube_id: 37tLBSHxzWk
+
+- title: Boundary Pass Underwater Listening Station
+  presenter: Melanie Austin
+  time: Late morning Aug 31
+  video_url: https://youtu.be/R-OI8oltGKo
+  youtube_id: R-OI8oltGKo
+
+- title: Music Information Retrieval Random Forest (MIRRF) Classifier for PAMGuard
+  presenter: Taylor Leblond
+  time: Late morning Aug 31
+  video_url: https://youtu.be/_rNcYphOKyc
+  youtube_id: _rNcYphOKyc
+
+- title: Deep Learning and Marine Bioacoustics
+  presenter: Oliver Kirsebom
+  time: Early afternoon Aug 31
+  video_url: https://youtu.be/ZJz3MdNiUMY
+  youtube_id: ZJz3MdNiUMY
+
+- title: "Open-source Detector: Current State and Future Efforts"
+  presenter: Fabio Frazao
+  time: Early afternoon Aug 31
+  video_url: https://youtu.be/YHixr-N_VQY
+  youtube_id: YHixr-N_VQY
+
+- title: Characterizing Southern Resident Killer Whale (SRKW) Calls Using a Particle Filter for Frequency Ridge Extraction
+  presenter: Paul Nguyen Hong Duc
+  time: Early afternoon Aug 31
+  video_url: https://youtu.be/jOS-R4DHiHU
+  youtube_id: jOS-R4DHiHU
+
+- title: Adventures with Autoencoders
+  presenter: Val Viers
+  time: Early afternoon Aug 31
+  video_url: https://youtu.be/MLuDuFjUAxE
+  youtube_id: MLuDuFjUAxE
+
+- title: Orca Call Analysis for Source Separation
+  presenter: Ambra Jin
+  time: Early afternoon Aug 31
+  video_url: https://youtu.be/5r5bq3Qs34c
+  youtube_id: 5r5bq3Qs34c
+
+- title: Integrating Acoustic and Visual Observations for Cetacean Conservation
+  presenter: Virgil Zetterlind
+  time: Late afternoon Aug 31
+  video_url: https://youtu.be/d15uOYCt9F4
+  youtube_id: d15uOYCt9F4
+
+- title: Streaming Data in the Wild 
+  presenter: Andrei Vassilenko/Jillian Anderson
+  time: Late afternoon Aug 31
+  video_url: https://youtu.be/RERsnzFyd1g
+  youtube_id: RERsnzFyd1g
+
+- title: Catalyzing Conservation of Southern Resident Killer Whale
+  presenter: Scott Viers
+  time: Late afternoon Aug 31
+  video_url: https://youtu.be/kD7ozqCww-Q
+  youtube_id: kD7ozqCww-Q
+
+- title: Streamlining the OrcaAL (Orca Active Learning Tool)
+  presenter: Benjamin Chew
+  time: Late afternoon Aug 31
+  video_url: https://youtu.be/my2RqPoRC6M
+  youtube_id: my2RqPoRC6M
+
+- title: Non-song Humpback Vocalizations from Inland Waters of Washington
+  presenter: Emily Vierling
+  time: Early morning September 1
+  video_url: https://youtu.be/2qnRTnMCLRw
+  youtube_id: 2qnRTnMCLRw
+
+- title: Stream External Hydrophones to Orcasound Websites
+  presenter: Karan Mishra
+  time: Early morning September 1
+  video_url: https://youtu.be/mlxg8G5SoIM
+  youtube_id: mlxg8G5SoIM

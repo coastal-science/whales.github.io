@@ -1,0 +1,7 @@
+weight: 1
+title: "HALLO"
+description: "<p>Humans and Algorithms<br>Listening to Orcas</p>"
+position: bottom-left # empty (text does not overlap with image), centered, four combinations of {top | bottom}-{left | right}
+textalign: # left (default), right
+photocredits: "Lauren Laturnus" # or leave blank
+image: "img/LaurenWhaleUnderwater.jpg"

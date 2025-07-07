@@ -1,0 +1,6 @@
+weight: 5
+name: "Classification Models"
+icon: "fa fa-check"
+thumbnail: img/short_detector_animation.gif
+url: "applications/classification/"
+description: "Models that identify the source of underwater sounds. Explore our diverse models designed to discern underwater sounds from marine mammals."

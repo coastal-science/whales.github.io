@@ -1,0 +1,8 @@
+weight: 3
+title: "Whale Sightings"
+description: "<p> Our whale forecast system uses inputs from whale sightings reported by citizen science organizations based in several locations around the Salish Sea </p>"
+position: bottom-left
+textalign: # left (default), right
+image: "img/OliviaWhaleSighting.jpg"
+photocredits: "Olivia Murphy" # or leave blank
+href: "research/whale-sightings"

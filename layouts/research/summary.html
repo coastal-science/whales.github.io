@@ -1,0 +1,29 @@
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="image publication-image">
+      <a href="{{ .Params.publicationurl }}">
+          <img class="img-responsive" alt="Read more about {{ .Title | safeHTML }}" src="{{ .Params.image }}" >
+      </a>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="publication-details">
+      <h3 class="publication-title">
+        <a href="{{ .Params.publicationurl }}">{{ .Title }}</a>
+      </h3>
+      <p class="authors">
+      {{ if .Params.authors }}
+        {{ delimit .Params.authors ", " " and " | plainify | markdownify}}
+      {{ end }}
+      </p>
+      <p class="journal-venue">{{ .Params.journal | plainify | markdownify }}</p>
+      {{ if .Params.doi }}
+        <p class="doi">{{ .Params.doi | plainify | markdownify }}</p>
+      {{ end }}
+      <p class="abstract">{{ .Content }}</p>
+    </div>
+  </div>
+</div>
+
+

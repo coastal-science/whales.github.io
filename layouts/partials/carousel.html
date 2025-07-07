@@ -1,0 +1,42 @@
+{{ if default true .Site.Params.CarouselHomepage.enable }}
+{{ if isset .Site.Data "carousel" }}
+{{ if gt (len .Site.Data.carousel) 0 }}
+<section>
+    <div class="home-carousel">
+        <div class="dark-mask"></div>
+        <div class="container">
+            <div class="homepage owl-carousel"
+                data-autoplay="{{ default true .Site.Params.CarouselHomepage.auto_play }}"
+                data-slide-speed="{{ default 2000 .Site.Params.CarouselHomepage.slide_speed }}"
+                data-pagination-speed="{{ default 1000 .Site.Params.CarouselHomepage.pagination_speed }}">
+                {{ range sort .Site.Data.carousel "weight" }}
+                <div class="item card bg-dark text-white">
+                    <!-- <div class="card bg-dark text-white"> -->
+                    {{ if .href }}
+                    <a href="{{ .href }}" target="_blank" title="{{ .Title | safeHTML }}" alt="Read more about {{ .Title | safeHTML }}">
+                    {{ end }}
+                        <!-- <img class="card-img img-responsive" src="{{ .image }}" alt="Card image"> -->
+                        <figure>
+                            <img class="card-img img-responsive" src="{{ .image }}" alt="carousel {{ .Title | safeHTML }}">
+                            {{ with .photocredits }} <figcaption style="color:white; text-align: center;">Photo Credits: {{ . | markdownify }}</figcaption> {{ end }}
+                            <div class="card-img-overlay col-sm-5 
+                            {{ with .textalign }}{{ . }}{{ end }} 
+                            {{ with .position }}{{ . }}{{ end }}">
+                                <h1 class="card-title">{{ .title | safeHTML }}</h1>
+                                <div class="card-text">{{ .description | safeHTML }}</div>
+                            </div>
+                        </figure>
+                      <!-- </div> -->
+                    {{ if .href }}
+                    </a>
+                    {{ end }}
+                </div>
+                {{ end }}
+            </div>
+            <!-- /.project owl-slider -->
+        </div>
+    </div>
+</section>
+{{ end }}
+{{ end }}
+{{ end }}

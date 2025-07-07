@@ -1,0 +1,212 @@
+/* 
+https://stackoverflow.com/a/39164739
+@import url('//cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css');
+@import url('//cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css'); 
+*/
+
+/* owl-centered === customers */
+
+.customers .owl-wrapper {
+  display: table !important;
+}
+.customers .owl-item {
+  display: table-cell;
+  float: none;
+  vertical-align: middle;
+}
+.customers .owl-item > div {
+  text-align: center;
+} 
+
+/* .owl-wrapper {
+  display: table !important;
+}
+.customers .owl-item {
+  display: table-cell;
+  float: none;
+  vertical-align: middle;
+}
+.customers .owl-item > div {
+  text-align: center;
+}
+*/
+
+/****
+Text wrapping
+****/
+.wrap-right {
+    float: right; 
+    margin: 5px;
+}
+
+.wrap-left {
+  float: left; 
+  margin: 5px;
+}
+
+img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.fig-caption {
+  font-size: 14px;
+  margin-bottom: 1em; /* Adds space below the figcaption */
+}
+
+.fig-caption .photo-credit {
+  text-align: right;
+  margin-bottom: 0.5em; /* Adds space between the credit and the description */
+}
+
+.row.display-flex {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+}
+.row.display-flex > [class*='col-'] {
+  display: flex;
+  flex-direction: column;
+}
+
+.partner-logo {
+  margin-top: 10px; 
+  margin-bottom: 10px;
+  /* border: 1px solid rgba(86,61,124,.2); */
+}
+
+
+
+/****
+Carousel text overlay over image 
+****/
+/* Container holding the image and the text */
+.container {
+  position: relative;
+  /* text-align: center;
+  color: white; */
+}
+
+.post-content{
+  padding-bottom: 50px;
+  padding-top: 10px;
+  font-size: 16px;
+}
+
+.post-content p {
+  margin-bottom: 20px;
+}
+
+.justified-text {
+  text-align: justify;
+}
+
+/* p {
+  margin-bottom: 20px;
+} */
+
+
+/* Bottom left text */
+.bottom-left {
+  position: absolute;
+  bottom: 18px;
+  left: 16px;
+}
+
+/* Top left text */
+.top-left {
+  position: absolute;
+  top: 8px;
+  left: 16px;
+}
+
+/* Top right text */
+.top-right {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+}
+
+/* Bottom right text */
+.bottom-right {
+  position: absolute;
+  bottom: 18px;
+  right: 16px;
+}
+
+/* Centered text */
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.application-summary {
+  margin-bottom: 20px; /* Space between items */
+  text-align: center; /* Center-aligns the content */
+}
+
+.application-image img {
+  max-width: 100%; /* Ensures the image is responsive */
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  overflow: hidden;
+
+}
+
+figure img.custom-image {
+  max-width: 500px !important;
+  height: auto !important;
+}
+
+.banner-image {
+  max-width: 100%;
+  height: auto; /* Maintain aspect ratio */
+  width: 400px; /* Set desired width */
+}
+
+
+.application-content {
+  text-align: left;
+  /* Additional styling for content if needed */
+}
+
+.application-title {
+  font-weight: bold;
+  margin-bottom: 10px; /* Space below the title */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  /* Need to check for different screen types and adjust as necessary */
+  .card-text { 
+    /* Carousel text */
+    display: none; 
+  } 
+}
+
+.publication-title {
+  font-weight: bold;
+  color: black;
+  margin-bottom: 20px;
+}
+
+.authors, .journal-venue, .doi {
+  color: #333; /* Dark gray */
+  margin-bottom: 15px;
+}
+
+.publication-image {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.publication-item {
+  margin-bottom: 40px;
+}

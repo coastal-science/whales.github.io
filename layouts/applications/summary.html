@@ -1,0 +1,17 @@
+<div class="application application-summary">
+  {{ if .Params.thumbnail }}
+  <div class="application-image">
+    <a href="{{ if .Params.thumbnailurl }} {{ .Params.thumbnailurl }} {{ else }} {{ .Permalink }} {{ end }}"><img src="{{ .Params.thumbnail | relURL }}" alt="{{ .Title | safeHTML }}"/></a>
+  </div>
+  {{ end }}
+  <div class="application-content">
+    <h2 class="application-title">
+      <a href="{{ .Permalink }}" aria-label="Read more about {{ .Title | safeHTML }}">{{ .Title }}</a>
+    </h2>
+    {{ with .Params.description }}
+      <p>{{ . }}</p>
+    {{ else }}
+      <p>{{ .Content | plainify | markdownify | truncate 120 "..." }}</p>
+    {{ end }}
+  </div>
+</div>
