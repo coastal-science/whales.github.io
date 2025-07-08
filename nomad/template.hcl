@@ -3,10 +3,16 @@ job "${__SERVICE__}-${__ENVIRONMENT__}" {
   namespace = "${__NAMESPACE__}"
 
   constraint {
-    attribute = "${meta.role}"
-    operator  = "!="
-    value     = "rcg-ingress"
+    attribute = "${node.unique.name}"
+    operator  = "="
+    value     = "nomad-hallo-apps.novalocal"
   }
+
+  # constraint {
+  #   attribute = "${meta.role}"
+  #   operator  = "!="
+  #   value     = "rcg-ingress"
+  # }
 
   constraint {
     distinct_hosts = true
