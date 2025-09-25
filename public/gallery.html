@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gallery - SFU Research Portal</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        body {
+            font-family: 'Lava', Arial, Helvetica, sans-serif;
+            margin: 0;
+            color: #333;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #CC0633;
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-grid img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .gallery-grid img:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<div id="header"></div>
+
+<!-- Main Gallery Content -->
+<main>
+    <h1>Gallery</h1>
+    <p>Explore highlights from SFU Research Portal projects and events.</p>
+
+    <div class="gallery-grid">
+        <img src="assets/images/sample1.jpg" alt="Gallery Image 1">
+        <img src="assets/images/sample2.jpg" alt="Gallery Image 2">
+        <img src="assets/images/sample3.jpg" alt="Gallery Image 3">
+        <img src="assets/images/sample4.jpg" alt="Gallery Image 4">
+        <img src="assets/images/sample5.jpg" alt="Gallery Image 5">
+        <img src="assets/images/sample6.jpg" alt="Gallery Image 6">
+    </div>
+</main>
+
+<!-- Footer -->
+<div id="footer"></div>
+<script src="include.js"></script>
+<script>
+    includeHTML("header", "header.html");
+    includeHTML("footer", "footer.html");
+</script>
+</body>
+</html>

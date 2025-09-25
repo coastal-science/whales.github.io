@@ -1,0 +1,34 @@
+{
+  "items": [
+    {
+      "type": "person",
+      "title": "Dr. A. Researcher",
+      "desc": "Environmental modelling and climate adaptation"
+    },
+    {
+      "type": "project",
+      "title": "Coastal Resilience",
+      "desc": "Long-term monitoring of the shoreline"
+    },
+    {
+      "type": "publication",
+      "title": "Mapping Urban Heat Islands",
+      "desc": "Open-access study 2024"
+    },
+    {
+      "type": "dataset",
+      "title": "Seawatch sensors 2018-2022",
+      "desc": "CSV timeseries"
+    },
+    {
+      "type": "person",
+      "title": "Prof. B. Scholar",
+      "desc": "Remote sensing & GIS"
+    },
+    {
+      "type": "project",
+      "title": "Forest Carbon Flux",
+      "desc": "Linking field and satellite observations"
+    }
+  ]
+}
