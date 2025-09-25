@@ -8,3 +8,4 @@ title = 'My New Hugo Site'
 theme = 'ananke'
 
 enableGitInfo = true
+publishDir = 'public-hugo'
