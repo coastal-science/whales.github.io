@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Positions - SFU Research Portal</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        body {
+            font-family: 'Lava', Arial, Helvetica, sans-serif;
+            margin: 0;
+            color: #333;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #CC0633;
+        }
+
+        p.lead {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .positions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .position-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .position-card h2 {
+            margin-top: 0;
+            color: #CC0633;
+        }
+
+        .position-card p {
+            margin-bottom: 15px;
+        }
+
+        .position-card a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: #CC0633;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .position-card a:hover {
+            background: #a90428;
+        }
+
+        @media(max-width: 768px) {
+            .positions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<div id="header"></div>
+
+<!-- Main -->
+<main>
+    <h1>Open Positions</h1>
+    <p class="lead">We are always looking for passionate and talented individuals to join our research team. Below are our current opportunities at SFU.</p>
+
+    <div class="positions">
+        <div class="position-card">
+            <h2>Graduate Student Opportunities</h2>
+            <p>We welcome motivated graduate students interested in Earth sciences, data analytics, and computational research. Prospective students are encouraged to explore graduate programs at SFU and contact us for potential projects.</p>
+            <a href="https://www.sfu.ca/gradstudies.html" target="_blank">Apply via SFU Graduate Studies</a>
+        </div>
+
+        <div class="position-card">
+            <h2>Postdoctoral Fellows</h2>
+            <p>We invite postdoctoral researchers with strong backgrounds in geoscience, machine learning, and modeling to join our team. Candidates may apply for external fellowships or contact us regarding available funding.</p>
+            <a href="mailto:info@sfu.ca">Contact Us</a>
+        </div>
+
+        <div class="position-card">
+            <h2>Undergraduate Research Assistants</h2>
+            <p>Opportunities are available for undergraduate students to gain hands-on research experience during the summer or academic year. These roles may involve field work, data processing, or software development.</p>
+            <a href="mailto:info@sfu.ca">Inquire Now</a>
+        </div>
+
+        <div class="position-card">
+            <h2>Collaborations</h2>
+            <p>We are always open to new collaborations with industry, academia, and government partners. If you are interested in working with us, please get in touch to discuss possibilities.</p>
+            <a href="mailto:info@sfu.ca">Get in Touch</a>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<div id="footer"></div>
+<script src="include.js"></script>
+<script>
+    includeHTML("header", "header.html");
+    includeHTML("footer", "footer.html");
+</script>
+</body>
+</html>

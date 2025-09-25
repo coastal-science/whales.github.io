@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Team - SFU Research Portal</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        body {
+            font-family: 'Lava', Arial, Helvetica, sans-serif;
+            margin: 0;
+            color: #333;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #CC0633;
+        }
+
+        p.lead {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .team-card {
+            text-align: center;
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .team-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        .team-card h2 {
+            margin: 10px 0 5px;
+            font-size: 1.2rem;
+            color: #CC0633;
+        }
+
+        .team-card h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: normal;
+            color: #555;
+        }
+
+        .team-card p {
+            font-size: 0.9rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<div id="header"></div>
+
+<!-- Main -->
+<main>
+    <h1>Our Team</h1>
+    <p class="lead">Meet the researchers, students, and collaborators who make our work possible at SFU.</p>
+
+    <div class="team-grid">
+        <div class="team-card">
+            <img src="assets/images/sample1.jpg" alt="Team Member 1">
+            <h2>Dr. Jane Doe</h2>
+            <h3>Principal Investigator</h3>
+            <p>Leads the research group, focusing on geoscience and data-driven modeling for real-world applications.</p>
+        </div>
+
+        <div class="team-card">
+            <img src="assets/images/sample2.jpg" alt="Team Member 2">
+            <h2>John Smith</h2>
+            <h3>Postdoctoral Fellow</h3>
+            <p>Works on machine learning applications in Earth sciences and computational modeling.</p>
+        </div>
+
+        <div class="team-card">
+            <img src="assets/images/sample3.jpg" alt="Team Member 3">
+            <h2>Sarah Lee</h2>
+            <h3>Graduate Student</h3>
+            <p>Researches seismic data analysis and visualization tools to support collaborative studies.</p>
+        </div>
+
+        <div class="team-card">
+            <img src="assets/images/sample4.jpg" alt="Team Member 4">
+            <h2>Michael Chen</h2>
+            <h3>Undergraduate Assistant</h3>
+            <p>Assists with fieldwork, data collection, and software development for research projects.</p>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<div id="footer"></div>
+<script src="include.js"></script>
+<script>
+    includeHTML("header", "header.html");
+    includeHTML("footer", "footer.html");
+</script>
+</body>
+</html>
