@@ -15,4 +15,4 @@ Accessibility & responsive features:
   - keyboard focus styles
   - mobile menu toggle (simple, no JS frameworks)
 
-
+You can replace the logo and favicon in assets/images/ with official assets. Follow SFU brand guidelines for colour and logo usage.
