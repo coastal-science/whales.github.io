@@ -68,7 +68,18 @@
 <div id="footer"></div>
 <script src="include.js"></script>
 <script>
-    includeHTML("header", "header.html");
+    includeHTML("header", "header.html", () => {
+        const toggleBtn = document.querySelector('.menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+
+        if (toggleBtn && navMenu) {
+            toggleBtn.addEventListener('click', () => {
+                const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+                toggleBtn.setAttribute('aria-expanded', String(!expanded));
+                navMenu.classList.toggle('show');
+            });
+        }
+    });
     includeHTML("footer", "footer.html");
 </script>
 </body>

@@ -33,6 +33,55 @@ nav a {
 }
 nav a:hover { color: var(--sfu-red); }
 
+
+/* Desktop nav menu style */
+.nav-menu {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+/* Hide the toggle button on desktop */
+.menu-toggle {
+    display: none;
+    font-size: 28px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    /* Show the toggle button on small screens */
+    .menu-toggle {
+        display: block;
+    }
+
+    /* Stack the nav menu vertically and hide it by default */
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%; /* just below the header */
+        right: 32px;
+        background: #fff;
+        border: 1px solid #ddd;
+        padding: 10px;
+        z-index: 999;
+    }
+
+    /* Show nav when toggled */
+    .nav-menu.show {
+        display: flex;
+    }
+
+    /* Optional: reduce spacing for mobile nav links */
+    .nav-menu a {
+        margin: 10px 0;
+    }
+}
+
+
 /* Carousel */
 .carousel {
     position: relative;

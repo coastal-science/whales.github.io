@@ -90,14 +90,14 @@
 
         <div class="team-card">
             <img src="assets/images/sample2.jpg" alt="Team Member 2">
-            <h2>Prof. John Smith</h2>
+            <h2>John Smith</h2>
             <h3>Postdoctoral Fellow</h3>
             <p>Works on machine learning applications in Earth sciences and computational modeling.</p>
         </div>
 
         <div class="team-card">
             <img src="assets/images/sample3.jpg" alt="Team Member 3">
-            <h2>M.Sc. Sarah Lee</h2>
+            <h2>Sarah Lee</h2>
             <h3>Graduate Student</h3>
             <p>Researches seismic data analysis and visualization tools to support collaborative studies.</p>
         </div>
@@ -115,7 +115,18 @@
 <div id="footer"></div>
 <script src="include.js"></script>
 <script>
-    includeHTML("header", "header.html");
+    includeHTML("header", "header.html", () => {
+        const toggleBtn = document.querySelector('.menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+
+        if (toggleBtn && navMenu) {
+            toggleBtn.addEventListener('click', () => {
+                const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+                toggleBtn.setAttribute('aria-expanded', String(!expanded));
+                navMenu.classList.toggle('show');
+            });
+        }
+    });
     includeHTML("footer", "footer.html");
 </script>
 </body>

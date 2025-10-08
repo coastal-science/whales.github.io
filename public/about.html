@@ -24,7 +24,7 @@
 <section class="section">
     <h2>Our Vision & Mission</h2>
     <p style="max-width:700px; margin:0 auto;">
-        At WHALES, our mission is to foster collaboration and innovation in research by connecting data, projects, and people across disciplines. We envision a future where open science, interdisciplinary methodology, and community engagement drive impactful scientific discovery.
+        At Whales, our mission is to foster collaboration and innovation in research by connecting data, projects, and people across disciplines. We envision a future where open science, interdisciplinary methodology, and community engagement drive impactful scientific discovery.
     </p>
 </section>
 
@@ -61,7 +61,18 @@
 <div id="footer"></div>
 <script src="include.js"></script>
 <script>
-    includeHTML("header", "header.html");
+    includeHTML("header", "header.html", () => {
+        const toggleBtn = document.querySelector('.menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+
+        if (toggleBtn && navMenu) {
+            toggleBtn.addEventListener('click', () => {
+                const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+                toggleBtn.setAttribute('aria-expanded', String(!expanded));
+                navMenu.classList.toggle('show');
+            });
+        }
+    });
     includeHTML("footer", "footer.html");
 </script>
 </body>
