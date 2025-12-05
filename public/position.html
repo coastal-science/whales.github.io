@@ -25,11 +25,82 @@
             color: #CC0633;
         }
 
+        h2 {
+            margin-top: 50px;
+        }
+
         p.lead {
             font-size: 1.1rem;
             margin-bottom: 30px;
         }
 
+        /* Supervisor Grid */
+        /* .supervisors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 25px;
+        } */
+        .supervisors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-top: 25px;
+            /* max-width: 900px;   Optional: keeps it from stretching too wide */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .supervisor-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        
+
+        .supervisor-card img {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            object-fit: cover;
+            float: left;
+            margin-right: 15px;
+        }
+
+        .supervisor-card h3 {
+            margin: 0;
+            padding-top: 5px;
+            color: var(--sfu-red);
+        }
+
+        .supervisor-card .affiliation {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .supervisor-card p {
+            margin-top: 10px;
+            clear: both;
+        }
+
+        .supervisor-card a {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 10px;
+            background: var(--sfu-red);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .supervisor-card a:hover {
+            background: var(--sfu-red-dark);
+        }
+        
+        /* Graduate program links */
         .positions {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -94,23 +165,150 @@ This program is not a graduate program by itself. It is meant as “add on” tr
 </p>
 
 
-    <h2>Steps to Apply</h2>
+    <!-- HOW TO APPLY -->
+<h2>How to Apply</h2>
+<ol>
+    <li><strong>Identify a supervisor</strong> from Dalhousie, SFU, or UVic (see list below).</li>
+    <li><strong>Contact the supervisor</strong> with your CV, transcripts, and a short statement of research interests.</li>
+    <li><strong>Apply formally</strong> to the graduate program only after a supervisor agrees to support your application.</li>
+</ol>
 
-<p class="lead">Fill out the Graduate Scholarship Application (see below) and submit with a CV and transcripts to the department once you have a supervisor. For more information, please contact the Program Coordinator: bruno_padovese@sfu.ca </p>
+<p class="lead" style="margin-top: 10px;">
+    For more information, please contact the Program Coordinator: 
+    <a href="mailto:bruno_padovese@sfu.ca">bruno_padovese@sfu.ca</a>
+</p>
 
+<div class="supervisors">
 
+    <div class="supervisor-card">
+        <img src="assets/images/Photo-Ruth.png" style="object-fit: cover; object-position: center top" alt="Dr. Ruth Joy">
+        <h3>Dr. Ruth Joy</h3>
+        <div class="affiliation">Assistant Professor, Environmental Science (SFU)</div>
+        <p>
+            Dr. Ruth Joy is an Assistant Professor in the School of Environemntal Science at Simon Fraser University specializing in marine mammal acoustics, 
+            spatial ecology, and applied data science for conservation management. Her work integrates machine learning, 
+            statistic modelling, and acoustic monitoring to support decision-making and protection strategies for threatened marine species.
+            Please visit Dr. Joy's website for more information.
+        </p>
+        <a href="https://www.sfu.ca/~rjoy/" target="_blank">Website</a>
+        <a href="mailto:rjoy@sfu.ca">Email</a>
+    </div>
 
+    <div class="supervisor-card">
+        <img src="assets/images/Photo-Mike.jpg" alt="Dr. Michael Dowd">
+        <h3>Dr. Michael Dowd</h3>
+        <div class="affiliation">Professor, Mathematics & Statistics (Dalhousie)</div>
+        <p>
+            Dr. Michael Dowd is a Professor in the Department of Mathematics & Statistics (cross-appointed with Oceanography) 
+            at Dalhousie University, specializing in statistical and mathematical methods for the ocean sciences, including data assimilation, 
+            state-space modelling, time series and signal processing for marine environmental data. His research covers acoustic whale detection, 
+            underwater noise analysis, marine animal movement modelling, coastal ecosystem dynamics, and ocean monitoring, 
+            contributing to data-driven conservation, habitat assessment, and ecosystem management. Please visit Dr. Dowd website for more information. Contact - <your-email>
+        </p>
+        <a href="https://www.mathstat.dal.ca/~mdowd/" target="_blank">Website</a>
+        <a href="mailto:michael.dowd@dal.ca">Email</a>
+    </div>
+
+    <div class="supervisor-card">
+        <img src="assets/images/Photo-Stan.jpg" style="object-fit: cover; object-position: center top" alt="Dr. Stan Dosso">
+        <h3>Dr. Stan Dosso</h3>
+        <div class="affiliation">Professor, School of Earth and Ocean Sciences (UVIc)</div>
+        <p>
+            Dr. Stan Dosso is a Professor in the School of Earth & Ocean Sciences at the University of Victoria specializing in ocean acoustics, geoacoustics, marine-mammal acoustics, and geophysical inverse theory. His work uses probabilistic inversion methods, acoustic propagation, and seabed geoacoustic modelling to characterize underwater sound transmission and seabed properties, supporting applications from habitat assessment to noise-impact evaluation. Please visit Dr. Dosso's faculty page for more information.
+        </p>
+        <a href="https://www.uvic.ca/science/seos/people/faculty/profiles/dosso-stan.php" target="_blank">Website</a>
+        <a href="mailto:sdosso@uvic.ca">Email</a>
+    </div>
+
+    <div class="supervisor-card">
+        <img src="assets/images/Photo-Bill.jpg" alt="Dr. Bill Halliday">
+        <h3>Dr. William Halliday</h3>
+        <div class="affiliation">Adjunct Professor, School of Earth and Ocean Sciences (UVIc)</div>
+        <p>
+            Dr. William Halliday is an Adjunct Professor in the School of Earth and Ocean Sciences at the University of Victoria, and Arctic Acoustics Program Lead at WCS Canada, working on Arctic underwater acoustic ecology of whales, seals, and fish and investigating how climate change and increasing shipping noise impact marine communication and habitat use. His work incorporates acoustic propagation, noise mapping, and long-term monitoring to inform conservation strategies for Arctic marine ecosystems. Please visit Dr. Halliday's website for more information
+        </p>
+        <a href="https://wdhalliday.weebly.com/" target="_blank">Website</a>
+        <a href="mailto:whalliday@wcs.org">Email</a>
+    </div>
+
+    <div class="supervisor-card">
+        <img src="assets/images/Photo-Laura.jpg" style="object-fit: cover; object-position: center top" alt="Dr. Laura Cowen">
+        <h3>Dr. Laura Cowen</h3>
+        <div class="affiliation">Professor, Mathematics & Statistics (UVIc)</div>
+        <p>
+            Dr. Laura Cowen is a Professor of Mathematics & Statistics at the University of Victoria, specializing in ecological statistics, capture-recapture methodology, and population inference for wildlife, and marine ecosystems. Her interdisciplinary work applies advanced statistical models to estimate population numbers, survival, and movement, including applications to marine mammals, thus contributing to data-driven conservation and ecosystem-management efforts. Please visit Dr. Cowen lab page for more information.
+        </p>
+        <a href="https://cowenlab.weebly.com/" target="_blank">Website</a>
+        <a href="mailto:lcowen@uvic.ca">Email</a>
+    </div>
+
+    <div class="supervisor-card">
+        <img src="assets/images/Photo-Owen.jpeg" alt="Dr. Owen Ward">
+        <h3>Dr. Owen Ward</h3>
+        <div class="affiliation">Assistant Professor, Department of Statistics & Actuarial Science (SFU)</div>
+        <p>
+            Dr. Owen Ward is an Assistant Professor in the Department of Statistics & Actuarial Science at Simon Fraser University, specializing in statistical and machine-learning models, statistical computation, and Bayesian statistics with applications to large-scale and complex data systems. His research also extends to environmental and ecological data analysis, applying modern machine-learning and statistical methods to data-driven conservation and acoustic ecology of marine ecosystems. Please visit Dr. Ward website for more information.
+        </p>
+        <a href="https://owenward.github.io/" target="_blank">Website</a>
+        <a href="mailto:owen_ward@sfu.ca">Email</a>
+    </div>
+
+    <div class="supervisor-card">
+        <img src="assets/images/Photo-David.jpeg" style="object-fit: cover; object-position: center 30%" alt="Dr. David Stenning">
+        <h3>Dr. David Stenning</h3>
+        <div class="affiliation">Assistant Professor, Department of Statistics & Actuarial Science (SFU)</div>
+        <p>
+            Dr. David Stenning is an Assistant Professor in the Department of Statistics and Actuarial Science at Simon Fraser University, specializing in Bayesian statistics, computer-model emulation, and uncertainty quantification, with applications to astronomy and the physical sciences. His research also extends into environmental and climate-relevant modelling, applying statistical methods to problems with real-world ecological and sustainability impact. Please visit Dr. Stenning faculty page for more information.
+        </p>
+        <a href="https://www.sfu.ca/stat-actsci/department/profiles/dstennin.html" target="_blank">Website</a>
+        <a href="mailto:david_stenning@sfu.ca">Email</a>
+    </div>
+
+    <div class="supervisor-card">
+        <img src="assets/images/Photo-Harald.png" style="object-fit: cover; object-position: center 30%" alt="Dr. Harald Yurk">
+        <h3>Dr. Harald Yurk</h3>
+        <div class="affiliation">Adjunct Professor, School of Environmental Science (SFU)</div>
+        <p>
+            Dr. Harald Yurk is an Adjunct Professor in the School of Environmental Science at Simon Fraser University and a Physical Scientist with Fisheries and Oceans Canada (DFO). His work focuses on marine-mammal bioacoustics, habitat use, and underwater soundscape studies, investigating how ambient and anthropogenic noise affects the communication, hearing, and behaviour of marine animals. He also contributes to acoustic-habitat assessment and long-term ecological monitoring of marine ecosystems. Please visit Dr. Yurk’s faculty page for more information.
+        </p>
+        <a href="https://www.sfu.ca/evsc/about/people/faculty-staff/harald-yurk.html" target="_blank">Website</a>
+        <a href="mailto:Harald.Yurk@dfo-mpo.gc.ca">Email</a>
+    </div>
+
+    <div class="supervisor-card">
+        <img src="assets/images/Photo-Hilary.jpg" style="object-fit: cover; object-position: center top" alt="Dr. Hilary Moors-Murphy">
+        <h3>Dr. Hilary Moors-Murphy</h3>
+        <div class="affiliation">Adjunct Professor, Department of Biology (Dalhousie)</div>
+        <p>
+            Dr. Hilary Moors-Murphy is a Research Scientist with Fisheries and Oceans Canada (DFO) and an Adjunct Professor at the Department of Biology, Dalhousie University. Her main area of expertise is marine mammal bioacoustics. The objectives of her Cetacean Research and Monitoring Program include increasing knowledge of cetacean occurrence off eastern Canada through innovative collection, analysis, and management of broadscale, long-term passive acoustic monitoring and sightings data. These data can help in the assessment of risks and impacts of human activities, increasing our understanding of threats to cetaceans and informing management and mitigation measures. Please visit Dr. Moors-Murphy profile for more information.
+        </p>
+        <a href="https://profils-profiles.science.gc.ca/en/profile/hilary-moors-murphy" target="_blank">Website</a>
+        <a href="mailto:Hilary.Moors-Murphy@dfo-mpo.gc.ca">Email</a>
+    </div>
+
+    <div class="supervisor-card">
+        <img src="assets/images/Photo-Mathias.png" style="object-fit: cover; object-position: 50% 20%" alt="Dr. Matthias Danninger">
+        <h3>Dr. Matthias Danninger</h3>
+        <div class="affiliation">Professor, Department of Physics (SFU)</div>
+        <p>
+            Dr. Matthias Danninger is a Professor in the Department of Physics at Simon Fraser University, with research spanning subatomic and astroparticle physics, dark-matter, and detector development for large-scale observational experiments. His research bridges physics with emergent deep-ocean detection platforms, supporting ocean-observatory infrastructure that contributes to long-term environmental monitoring and marine-ecosystem sensing. Please visit Dr. Danninger's faculty page for more information.
+        </p>
+        <a href="https://www.sfu.ca/physics/people/faculty/mdanning.html" target="_blank">Website</a>
+        <a href="mailto:matthias_danninger@sfu.ca">Email</a>
+    </div>
+</div>
+<!-- GRAD PROGRAM LINKS -->
+<h2>Graduate Program Admissions</h2>
+
+<p class="lead">Apply only after a supervisor confirms support for your application.</p>
     <div class="positions">
         <div class="position-card">
             <h2>Dalhousie Graduate Student Opportunities</h2>
-            <p>We welcome motivated graduate students interested in working with the WHALES group. Prospective students are encouraged to explore graduate programs at SFU and contact us for potential projects.</p>
-            <a href="https://www.dal.ca/faculty/science/biology/graduate.html" target="_blank">Apply in Biology</a>
             <a href="https://www.dal.ca/faculty/science/math-stats/programs/graduate-studies.html" target="_blank">Apply in Apply in Math & Stats</a>
         </div>
 
         <div class="position-card">
             <h2>SFU Graduate Student Opportunities</h2>
-            <p>We welcome motivated graduate students interested in working with the WHALES group. Prospective students are encouraged to explore graduate programs at SFU and contact us for potential projects.</p>
             <a href="https://www.sfu.ca/evsc/prospective-students/graduate/admission.html" target="_blank">Apply in Environmental Science</a>
             <a href="https://www.sfu.ca/physics/graduate.html" target="_blank">Apply in Physics</a>
             <a href="https://www.sfu.ca/stat-actsci/graduate/prospective-students/graduate-degree-programs/msc-statistics.html" target="_blank">Apply in Statistics</a>
@@ -118,7 +316,6 @@ This program is not a graduate program by itself. It is meant as “add on” tr
 
         <div class="position-card">
             <h2>UVIC Graduate Student Opportunities</h2>
-            <p>We welcome motivated graduate students interested in working with the WHALES group. Prospective students are encouraged to explore graduate programs at SFU and contact us for potential projects.</p>
             <a href="https://www.uvic.ca/graduate/programs/graduate-programs/pages/earth-and-ocean-sciences.php" target="_blank">Apply in Earth & Ocean Sciencess</a>
             <a href="https://www.uvic.ca/graduate/programs/graduate-programs/pages/physics-and-astronomy.php" target="_blank">Apply in Physics & Astronomy</a>
             <a href="https://www.uvic.ca/graduate/programs/graduate-programs/pages/mathematics-and-statistics.php" target="_blank">Apply in Math & Stats</a>
