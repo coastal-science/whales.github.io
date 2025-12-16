@@ -49,7 +49,6 @@ job "${__SERVICE__}-${__ENVIRONMENT__}" {
         image = "${__IMAGE_NAME__}:${__IMAGE_TAG__}"
         force_pull = "${__IMAGE_FORCE_PULL__}"
         ports = ["http"]
-        ports = ["http"]
         auth {
           username = "${__REGISTRY_USERNAME__}"
           password = "${__REGISTRY_PASSWORD__}"
