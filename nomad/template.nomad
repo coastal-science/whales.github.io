@@ -49,10 +49,11 @@ job "${__SERVICE__}-${__ENVIRONMENT__}" {
         image = "${__IMAGE_NAME__}:${__IMAGE_TAG__}"
         force_pull = "${__IMAGE_FORCE_PULL__}"
         ports = ["http"]
-        # auth {
-        #   username = "${__USERNAME__}"
-        #   password = "${__PASSWORD__}"
-        # }
+        ports = ["http"]
+        auth {
+          username = "${__REGISTRY_USERNAME__}"
+          password = "${__REGISTRY_PASSWORD__}"
+        }
       }
 
     service {
