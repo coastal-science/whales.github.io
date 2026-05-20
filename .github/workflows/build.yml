@@ -43,6 +43,7 @@ jobs:
       id-token: write
       pages: write
       deployments: read
+      statuses: write
     uses: coastal-science/coastal-science.github.io/.github/workflows/pages-gh.yml@gha-patch-reusable-workflow
     secrets: inherit
 
