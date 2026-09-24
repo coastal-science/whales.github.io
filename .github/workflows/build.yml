@@ -44,7 +44,7 @@ jobs:
       pages: write
       deployments: read
       statuses: write
-    uses: coastal-science/coastal-science.github.io/.github/workflows/pages-gh.yml@7cfd555f9f3cf67e229503cec671cc46107d2afc
+    uses: coastal-science/coastal-science.github.io/.github/workflows/pages-gh.yml@9f98e95cee8972decc4e9a16ce801a475a76feba
     #41ad71ad4205f149f7e14dfcd5ee2afb9dd0e659 # main # gha-patch-reusable-workflow
     secrets: inherit
 
