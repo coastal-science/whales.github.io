@@ -67,7 +67,7 @@ job "${__SERVICE__}-${__ENVIRONMENT__}" {
     }
 
     resources {
-      cpu = 500
+      cpu = 250
       memory = 256
       }
 
