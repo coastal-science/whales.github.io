@@ -1,6 +1,11 @@
 job "${__SERVICE__}-${__ENVIRONMENT__}" {
+   meta {
+      run_uuid = "${uuidv4()}"
+    }
+
   datacenters = ${__DATACENTERS__}
   namespace = "${__NAMESPACE__}"
+  type        = "service"
   
   constraint {
     attribute = "${meta.node_class}"
