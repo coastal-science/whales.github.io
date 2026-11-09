@@ -44,7 +44,7 @@ jobs:
       pages: write
       deployments: read
       statuses: write
-    uses: coastal-science/coastal-science.github.io/.github/workflows/pages-gh.yml@68a38a00a62caa9a1e35a3f5f216f2085cf9515d # 082e2b3cf58a4afbf5aeb7a83ee5bf33fe2311a8
+    uses: coastal-science/coastal-science.github.io/.github/workflows/pages-gh.yml@68cb2d7c460178129ccde507156dfe3f0f2a0773 # 082e2b3cf58a4afbf5aeb7a83ee5bf33fe2311a8
     #41ad71ad4205f149f7e14dfcd5ee2afb9dd0e659 # main # gha-patch-reusable-workflow
     with:
       nomad_job_template: nomad/template.nomad
