@@ -1,0 +1,352 @@
+# Sample workflow for building and deploying a Hugo site to GitHub Pages
+name: Deploy Hugo site to Pages and build docker image [GitHub.com]
+run-name: Build/deploy Pages/Production
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main", "bootstrap-repo", "gha-"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  SERVICE: "${{ vars.SERVICE }}"
+  CONTAINER_PROJECT: "whales.github.io" # "rcg-containers" # repo name
+  WEB_URL: "${{ secrets.DOMAIN_NAME }}"
+  RESEARCHER: "${{ vars.__RESEARCHER__ }}"
+
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+# Default to bash
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  generate-timestamp:
+    permissions: {}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set TIMESTAMP
+        id: date
+        run: |
+             export DATE=$(date +'%Y%m%d-%H%M%S')
+             echo "TIMESTAMP=$DATE" >> $GITHUB_ENV
+    outputs:
+      TIMESTAMP: ${{ env.TIMESTAMP }}
+
+  configure-pages:
+    runs-on: ubuntu-latest
+    permissions: read-all
+    steps:
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v2
+    outputs:
+      base_url: ${{ steps.pages.outputs.base_url }}
+      
+  # Build job
+  build-website:
+    needs:
+      - generate-timestamp
+      - configure-pages
+    
+    runs-on: ubuntu-latest
+    container:
+      image: peaceiris/hugo
+
+    env:
+      HUGO_VERSION: 0.147.8 # latest  #  0.126.1 
+      HUGO_FORMS: ${{ vars.HUGO_FORMS }}
+      HUGO_GOOGLEANALYTICS: ${{ vars.HUGO_GOOGLEANALYTICS }}
+
+    # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: ${{ env.HUGO_VERSION }}
+          extended: true
+
+      - name: Pre-Build ls
+        run: |
+          ls -lah
+          echo "${{ needs.generate-timestamp.outputs.TIMESTAMP }}" from env
+          echo "${{ needs.configure-pages.outputs.base_url }}/" from env
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true  # Fetch Hugo themes (true OR recursive) # failing on ubuntu container
+          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+          # set-safe-directory: '/__w/coastal-science.github.io/coastal-science.github.io'
+          
+      - name: Set safe directory workaround
+        run: |
+          git config --global --add safe.directory /__w/coastal-science.github.io/coastal-science.github.io
+          
+      - name: Build with Hugo
+        env:
+          # For maximum backward compatibility with Hugo modules
+          HUGO_ENVIRONMENT: staging
+          HUGO_ENV: staging
+        run: |
+          hugo \
+            --gc \
+            --buildDrafts \
+            --minify \
+            --baseURL "${{ needs.configure-pages.outputs.base_url }}/"
+            
+      - name: Post-Build ls
+        run: ls -lah public/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  # Deployment job
+  deploy-gh-pages:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+    permissions:
+      contents: write
+      id-token: write
+      pages: write
+    runs-on: ubuntu-latest
+    needs: build-website
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # Create and publish a prod docker image          
+  build_and_push_prod_image:
+    environment: docker-image
+
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - generate-timestamp
+    env:
+      HUGO_VERSION: 0.147.8 # latest  #  0.126.1 
+      HUGO_FORMS: ${{ vars.HUGO_FORMS }}
+      HUGO_GOOGLEANALYTICS: ${{ vars.HUGO_GOOGLEANALYTICS }}
+      
+      REGISTRY: ghcr.io # docker.github.sfu.ca 
+      IMAGE_NAME: ${{ github.repository }}
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+
+    outputs: 
+      tags: ${{ steps.meta.outputs.tags }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true  # Fetch Hugo themes (true OR recursive) # failing on ubuntu container
+          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+          # set-safe-directory: '/__w/coastal-science.github.io/coastal-science.github.io'
+          
+      - name: Set safe directory workaround
+        run: |
+          git config --global --add safe.directory /__w/coastal-science.github.io/coastal-science.github.io
+      
+      - name: Generate tags
+        id: tags
+        run: |
+            # Get the current branch name
+            branch_name=$(git rev-parse --abbrev-ref HEAD)
+            # docker tag limit is 128 characters
+            # The timestamp (YYYY_MM_DD_HH_MM_SS), commit id (7), 
+            # and punctuation (additional _) take up 29 characters.
+            # For 3 catalogs the branch names is can occupy the 
+            # remaining characters = floor((128-29*3)/3) = 13
+            branch_name=${branch_name:0:13} 
+
+            # Get the abbreviated commit hash
+            commit_hash=$(git rev-parse --short HEAD)
+            
+            # Get the current commit datetime (without timezone)
+            commit_date=$(git show -s --format=%ci HEAD)
+            
+            # remove last five characters (timezone information)
+            commit_date=${commit_date:0:${#commit_date}-5} #-5 digits causes 'expression < 0' error. Instead dynamically get the string length.
+            
+            
+            # Combine the parts into the desired format
+            result="${branch_name}_${commit_hash}_${commit_date}"
+            
+            # remove leading/trailing spaces
+            # formatted_result=$(awk '{$1=$1;print}')
+            formatted_result=$(echo $result | xargs)
+            # Replace spaces, colons, and dashes with underscores
+            formatted_result=$(echo "$formatted_result" | sed 's/[ :\-]/_/g')
+            
+            #branch_name=$(echo $branch_name | xargs)
+            #branch_name=$(echo "$branch_name" | sed 's/[ :\-]/_/g')
+            
+            commit_hash=$(echo $commit_hash | xargs)
+            commit_hash=$(echo "$commit_hash" | sed 's/[ :\-]/_/g')
+            
+            commit_date=$(echo $commit_date | xargs)
+            commit_date=$(echo "$commit_date" | sed 's/[ :\-]/_/g')
+            
+            # Print the final result and return it
+            echo "$formatted_result"
+            
+            echo "TAG=${TAG-random}" >> "$GITHUB_OUTPUT"
+            echo "EXTRA_TAG=${EXTRA_TAG}" >> "$GITHUB_OUTPUT"
+            #echo "branch_name=${branch_name}" >> "$GITHUB_OUTPUT"
+            echo "commit_hash=${commit_hash}" >> "$GITHUB_OUTPUT"
+            echo "commit_date=${commit_date}" >> "$GITHUB_OUTPUT"
+
+      - name: List repos in workspace
+        run: |
+          ls -lah
+          du -sh *
+          echo The current workspace repo is..
+          pwd
+
+      # GH Actions
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: ${{ env.HUGO_VERSION }}
+          extended: true
+
+      - name: Build and Minify with Hugo
+        env:
+          # For maximum backward compatibility with Hugo modules
+          HUGO_ENVIRONMENT: production
+          HUGO_ENV: production
+        run: |
+          hugo \
+            --gc \
+            --minify \
+            --baseURL "${{ env.HUGO_BASEURL }}/"
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+     
+      # Login against a Docker registry except on PR
+      # https://github.com/docker/login-action
+      - name: Log into registry ${{ env.REGISTRY }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3 #343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Extract metadata (tags, labels) for Docker
+      # https://github.com/docker/metadata-action
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} # /${{ env.SERVICE }}
+          labels: |
+            org.opencontainers.image.version=${{ needs.generate-timestamp.outputs.TIMESTAMP }}
+
+      - name: Build website with Dockerfile.prod
+        env:
+          HUGO_BASEURL: "${{ vars.HUGO_BASEURL }}"
+          ORIGINS: "${{ vars.ORIGINS }}"
+          OAUTH_CLIENT_ID: "${{ vars.OAUTH_GITHUB_CLIENT_ID }}"
+          OAUTH_GITHUB_CLIENT_SECRET: "${{ secrets.OAUTH_GITHUB_CLIENT_SECRET }}"
+          CMS_BACKEND_DEBUG: ${{ vars.CMS_BACKEND_DEBUG || ''}}
+          
+        run: |
+          docker compose -f docker-compose.yaml -f docker-compose.override.yaml build website
+          docker tag website ${{ steps.meta.outputs.tags }}
+          # docker tag website ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.tags.outputs.branch_name }}
+          docker tag website ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.tags.outputs.commit_hash }}
+          docker tag website ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.tags.outputs.commit_date }}
+          docker tag website ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          
+          docker push --all-tags ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+  
+  # Create and publish a prod docker image          
+  deploy_prod_image:
+    if: false
+    #if: github.ref == 'refs/heads/main'
+    environment: docker-image
+    permissions:
+      contents: read
+      packages: read
+    needs:
+      - build_and_push_prod_image
+    runs-on: [ self-hosted, rcg ]
+    env:      
+        REGISTRY: ghcr.io # docker.github.sfu.ca 
+        IMAGE_NAME: ${{ github.repository }}
+        ENVIRONMENT: "production"
+    container:
+      image: alpine:3.18
+ 
+    steps:
+      - name: Prepare Environment
+        run: |
+             apk update
+             apk add gettext nomad
+
+      - name: Test Nomad
+        run: NOMAD_TOKEN=${{ secrets.NOMAD_SERVER_TOKEN }} NOMAD_ADDR=${{ secrets.NOMAD_SERVER_ADDRESS }} nomad status
+
+      - name: Setup Nomad Job
+        run: |
+             __SERVICE__="${{ env.SERVICE }}" \
+             __JOB_DRIVER__="docker" \
+             __ENVIRONMENT__="${{ env.ENVIRONMENT }}" \
+             __WEB_URL__="${{ env.WEB_URL }}" \
+             __JOB_NAME__="${{ env.SERVICE }}-${{ env.ENVIRONMENT }}" \
+             # __IMAGE_NAME__="${{ secrets.REGISTRY_SERVER }}/${{ env.CONTAINER_PROJECT }}/${{ env.SERVICE }}" \
+             __IMAGE_NAME__="${{ env.IMAGE_NAME }}" \
+             __IMAGE_TAG__="${{ needs.generate-timestamp.outputs.TIMESTAMP }}" \
+             __DATACENTERS__="${{ secrets.NOMAD_SERVER_DATACENTERS }}"" \
+             __NAMESPACE__="${{ secrets.NOMAD_SERVER_NAMESPACE }}" \
+             #__USERNAME__="${{ secrets.GITLAB_CONTAINER_USERNAME }}" \
+             #__PASSWORD__="${{ secrets.GITLAB_CONTAINER_TOKEN }}" \
+             # __REGISTRY__="${{ secrets.NOMAD_SERVER_DATACENTERS }}" \
+              __RESEARCHER__="${{ env.RESEARCHER }}" \
+             envsubst < nomad/template.hcl > ${{ env.SERVICE }}.hcl
+             cat ${{ env.SERVICE }}.hcl
+
+      - name: Deploy TIMESTAMPED Website To Nomad
+        run: NOMAD_TOKEN=${{ secrets.NOMAD_SERVER_TOKEN }} NOMAD_ADDR=${{ secrets.NOMAD_SERVER_ADDRESS }} nomad job run ${{ env.SERVICE }}.hcl
+
+  # Cleanup workspace on the runner
+  cleanup:
+    # if: ${{ always() }}
+    permissions: {}
+    needs: 
+      # - build-website
+      # - deploy-gh-pages
+      - build_and_push_prod_image
+      - deploy_prod_image
+    # runs-on: ubuntu-latest
+    runs-on: [ self-hosted, rcg ]
+    steps:
+      - name: Current workspace
+        run: du -shc ${GITHUB_WORKSPACE}
+      - name: Clean Up Docker Images
+        run: docker rmi -f $(docker images '${{ needs.build_and_push_prod_image.outputs.tags }}' -a -q)
+      - name: Clean Up Workspace
+        run: rm -rf ${GITHUB_WORKSPACE}
