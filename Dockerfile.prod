@@ -1,4 +1,3 @@
 FROM nginx:alpine
-ENV USER=nginx
-COPY --from=public --chown=$USER:$USER . /usr/share/nginx/html
+COPY --from=public --chown=nginx:nginx . /usr/share/nginx/html
 COPY --from=nginx --chown=nginx:nginx . /etc/nginx/

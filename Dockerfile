@@ -32,7 +32,7 @@ FROM nginx:alpine
 # WORKDIR /usr/share/nginx/html
 
 # Copy HTML from previous build into the Workdir.
-COPY --from=build --chown=$USER:$USER /opt/HugoApp/public /usr/share/nginx/html
+COPY --from=build --chown=nginx:nginx /opt/HugoApp/public /usr/share/nginx/html
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # COPY --from=public --chown=$USER:$USER . /usr/share/nginx/html
