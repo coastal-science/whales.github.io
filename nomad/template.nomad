@@ -39,7 +39,7 @@ job "${__SERVICE__}-${__ENVIRONMENT__}" {
         port "http" {
           to = 80
         }
-   }
+      }
 
     task "${__SERVICE__}-${__ENVIRONMENT__}" {
       driver = "${__JOB_DRIVER__}"
