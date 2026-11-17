@@ -2,7 +2,8 @@ baseURL = 'https://example.org/'
 # baseURL = "http://localhost"
 
 # Site language. Available translations in the theme's `/i18n` directory.
-languageCode = 'en-us'
+# Hugo 0.158+: languageCode deprecated — use locale.
+locale = 'en-us'
 defaultContentLanguage = "en"
 title = 'My New Hugo Site'
 theme = 'ananke'
