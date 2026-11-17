@@ -1,0 +1,194 @@
+# Dispatcher entrypoint: triggers + concurrency live here; deploy leaves are in VWJF/rcg-sites.
+#
+# Environments & secrets (this repo):
+# - Create/select Environments here (e.g. docker-image) with the Nomad/registry secrets and vars.
+# - Leaf jobs in rcg-sites set `environment:`; this file cannot (jobs with `uses:` forbid it).
+# - Pass those secrets by name into deploy.nomad (see `secrets:` on that job). Across owners,
+#   `secrets: inherit` alone does not deliver caller environment secrets — they arrive empty.
+# - Callers of this file (manual.dispatch) must pass the same secrets by name into workflow_call.
+# - Call the split leaves directly (one hop). Do not call rcg-sites site.dispatch.yml (sample only).
+#
+# Repo vars: set ENABLE_GITHUB_PAGES and/or ENABLE_NOMAD to "true" (or force via manual.dispatch).
+# Pin: modularize (build.pages / deploy.pages / build.docker / deploy.nomad).
+name: Deploy Hugo site - Production and Preview
+run-name: ${{ github.event_name == 'pull_request' && format('Preview [PR {0} - {1}] {2}  ', github.event.pull_request.number, github.head_ref, github.event.head_commit.message) || format('[{0}] {1}', github.ref_name, github.event.head_commit.message) }}
+
+on:
+  # Only push to default branch — avoids double trigger when pushing to a PR branch (push + pull_request synchronize)
+  push:
+    branches: [main]
+
+  # Runs on pull requests for Deploy Preview Links (one run per commit on a PR)
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+
+  # Manual runs live in manual.dispatch.yml (workflow_dispatch → workflow_call here).
+  workflow_call:
+    inputs:
+      enable_github_pages:
+        description: Force-on override for Pages when repo var ENABLE_GITHUB_PAGES is unset/false. Default false.
+        type: boolean
+        required: false
+        default: false
+      enable_nomad:
+        description: Force-on override for Nomad when repo var ENABLE_NOMAD is unset/false. Default false.
+        type: boolean
+        required: false
+        default: false
+      caller_event_name:
+        description: Original event_name from the top-level caller (push, pull_request, workflow_dispatch). Nested jobs see workflow_call.
+        type: string
+        required: false
+        default: ''
+      caller_event_action:
+        description: Original pull_request action from the top-level caller.
+        type: string
+        required: false
+        default: ''
+      pr_number:
+        type: string
+        required: false
+        default: ''
+      pr_head_sha:
+        type: string
+        required: false
+        default: ''
+      pr_merged:
+        type: boolean
+        required: false
+        default: false
+      head_ref:
+        type: string
+        required: false
+        default: ''
+      nomad_job_template:
+        required: false
+        description: The Nomad job template to use for the deployment (e.g. nomad/template.nomad or nomad/decap.template.nomad).
+        type: string
+        default: ''
+      use_decap:
+        required: false
+        description: Override USE_DECAP ("true" or "false"); leave empty for branch-based determination.
+        type: string
+        default: ""
+      runs_on:
+        description: Runner label (ubuntu-latest) or JSON array (["self-hosted","rcg"]). Empty defaults to ubuntu-latest.
+        type: string
+        required: false
+        default: ''
+    secrets:
+      NOMAD_SERVER_TOKEN:
+        required: true
+      NOMAD_SERVER_ADDRESS:
+        required: true
+      NOMAD_REGISTRY_PASSWORD:
+        required: true
+      __RESEARCHER__:
+        required: true
+      __DOMAIN_NAME__:
+        required: true
+      OAUTH_GITHUB_CLIENT_SECRET:
+        required: true
+
+# Entrypoint-owned concurrency. Leaves have none.
+concurrency:
+  group: ${{ github.repository }}-whale-pages-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('branch-{0}', github.ref_name) }}
+  cancel-in-progress: true
+
+jobs:
+  generate-timestamp:
+    permissions: {}
+    runs-on: ${{ inputs.runs_on == '' && 'ubuntu-latest' || (startsWith(inputs.runs_on, '[') && fromJSON(inputs.runs_on) || inputs.runs_on) }}
+    steps:
+      - name: Set TIMESTAMP and get REPO_NAME
+        id: date
+        run: |
+             export DATE=$(date +'%Y%m%d-%H%M%S')
+             REPO_NAME=${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}
+             echo "TIMESTAMP=$DATE" >> $GITHUB_ENV
+             echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
+             echo "${{ github.event_name}} .. ${{ github.event.action }} .. ${{ github.event.pull_request.merged }}"
+
+    outputs:
+      TIMESTAMP: ${{ env.TIMESTAMP }}
+      REPO_NAME: ${{ env.REPO_NAME }}
+
+  build-pages:
+    needs:
+      - generate-timestamp
+    permissions:
+      contents: read
+      pages: read
+    uses: VWJF/rcg-sites/.github/workflows/build.pages.yml@modularize
+    with:
+      timestamp: ${{ needs.generate-timestamp.outputs.TIMESTAMP }}
+      repo_name: ${{ needs.generate-timestamp.outputs.REPO_NAME }}
+      event_name: ${{ inputs.caller_event_name || github.event_name }}
+      event_action: ${{ inputs.caller_event_action || github.event.action }}
+      enable_github_pages: ${{ github.event_name == 'workflow_call' && inputs.enable_github_pages || false }}
+      runs_on: ${{ inputs.runs_on }}
+
+  deploy-pages:
+    needs:
+      - build-pages
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    uses: VWJF/rcg-sites/.github/workflows/deploy.pages.yml@modularize
+    with:
+      event_name: ${{ inputs.caller_event_name || github.event_name }}
+      event_action: ${{ inputs.caller_event_action || github.event.action }}
+      enable_github_pages: ${{ github.event_name == 'workflow_call' && inputs.enable_github_pages || false }}
+      runs_on: ${{ inputs.runs_on }}
+
+  build-docker:
+    needs:
+      - generate-timestamp
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: VWJF/rcg-sites/.github/workflows/build.docker.yml@modularize
+    with:
+      timestamp: ${{ needs.generate-timestamp.outputs.TIMESTAMP }}
+      repo_name: ${{ needs.generate-timestamp.outputs.REPO_NAME }}
+      event_name: ${{ inputs.caller_event_name || github.event_name }}
+      event_action: ${{ inputs.caller_event_action || github.event.action }}
+      pr_number: ${{ inputs.pr_number || github.event.pull_request.number }}
+      pr_head_sha: ${{ inputs.pr_head_sha || github.event.pull_request.head.sha }}
+      pr_merged: ${{ github.event_name == 'workflow_call' && inputs.pr_merged || github.event.pull_request.merged == true }}
+      head_ref: ${{ inputs.head_ref || github.head_ref }}
+      enable_nomad: ${{ github.event_name == 'workflow_call' && inputs.enable_nomad || false }}
+      runs_on: ${{ inputs.runs_on }}
+
+  deploy-nomad:
+    needs:
+      - generate-timestamp
+      - build-docker
+    permissions:
+      contents: read
+      packages: read
+      statuses: write
+    uses: VWJF/rcg-sites/.github/workflows/deploy.nomad.yml@modularize
+    # Explicit pass required for caller environment secrets (see header).
+    secrets:
+      NOMAD_SERVER_TOKEN: ${{ secrets.NOMAD_SERVER_TOKEN }}
+      NOMAD_SERVER_ADDRESS: ${{ secrets.NOMAD_SERVER_ADDRESS }}
+      NOMAD_REGISTRY_PASSWORD: ${{ secrets.NOMAD_REGISTRY_PASSWORD }}
+      __RESEARCHER__: ${{ secrets.__RESEARCHER__ }}
+      __DOMAIN_NAME__: ${{ secrets.__DOMAIN_NAME__ }}
+      OAUTH_GITHUB_CLIENT_SECRET: ${{ secrets.OAUTH_GITHUB_CLIENT_SECRET }}
+    with:
+      timestamp: ${{ needs.generate-timestamp.outputs.TIMESTAMP }}
+      repo_name: ${{ needs.generate-timestamp.outputs.REPO_NAME }}
+      event_name: ${{ inputs.caller_event_name || github.event_name }}
+      event_action: ${{ inputs.caller_event_action || github.event.action }}
+      pr_number: ${{ inputs.pr_number || github.event.pull_request.number }}
+      pr_head_sha: ${{ inputs.pr_head_sha || github.event.pull_request.head.sha }}
+      pr_merged: ${{ github.event_name == 'workflow_call' && inputs.pr_merged || github.event.pull_request.merged == true }}
+      head_ref: ${{ inputs.head_ref || github.head_ref }}
+      nomad_job_template: ${{ inputs.nomad_job_template || 'nomad/template.nomad' }}
+      use_decap: ${{ inputs.use_decap || 'auto' }}
+      enable_nomad: ${{ github.event_name == 'workflow_call' && inputs.enable_nomad || false }}
+      runs_on: ${{ inputs.runs_on }}

@@ -1,0 +1,200 @@
+# Sample workflow for building and deploying a Hugo site to GitHub Pages
+name: Deploy Hugo site to Pages and build docker image [RCG runner]
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  SERVICE: landing
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+# Default to bash
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  generate-timestamp:
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Set TIMESTAMP
+        id: date
+        run: |
+             export DATE=$(date +'%Y%m%d-%H%M%S')
+             echo "TIMESTAMP=$DATE" >> $GITHUB_ENV
+    outputs:
+      TIMESTAMP: ${{ env.TIMESTAMP }}
+
+  configure-pages:
+    runs-on: ubuntu-latest
+    permissions: read-all
+    steps:
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v2
+    outputs:
+      base_url: ${{ steps.pages.outputs.base_url }}
+      
+  # Build job
+  build-website:
+    needs:
+      - configure-pages
+    
+    runs-on: ubuntu-latest
+    container:
+      image: peaceiris/hugo
+
+    env:
+      HUGO_VERSION: latest  #  0.126.1 
+      HUGO_FORMS: ${{ vars.HUGO_FORMS }}
+      HUGO_GOOGLEANALYTICS: ${{ vars.HUGO_GOOGLEANALYTICS }}
+
+    # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+    permissions:
+      contents: read
+    
+    steps:
+    # GH Actions
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: ${{ env.HUGO_VERSION }}
+          extended: true
+
+      - name: Pre-Build ls
+        run: |
+          ls -lah
+          echo "${{ needs.generate-timestamp.outputs.TIMESTAMP }}" from env
+          echo "${{ needs.configure-pages.outputs.base_url }}/" from env
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true  # Fetch Hugo themes (true OR recursive) # failing on ubuntu container
+          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+          # set-safe-directory: '/__w/coastal-science.github.io/coastal-science.github.io'
+          
+      - name: Set safe directory workaround
+        run: |
+          git config --global --add safe.directory /__w/coastal-science.github.io/coastal-science.github.io
+          
+      - name: Build with Hugo
+        env:
+          # For maximum backward compatibility with Hugo modules
+          HUGO_ENVIRONMENT: production
+          HUGO_ENV: production
+        run: |
+          hugo \
+            --gc \
+            --buildDrafts \
+            --minify \
+            --baseURL "${{ needs.configure-pages.outputs.base_url }}/"
+            
+      - name: Post-Build ls
+        run: ls -lah public/
+      
+  # Deployment
+  deploy-gh-pages:
+    needs:
+      - build-website
+    
+    runs-on: ubuntu-latest
+    container:
+      image: peaceiris/hugo
+
+    env:
+      HUGO_VERSION: latest
+    
+    # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Deploy 
+      # uploads via a git commit to github.sfu.ca
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public # default: public
+          publish_branch: gh-pages # default: gh-pages
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: ${{ github.event.head_commit.message }}
+
+  # Create and publish a docker image          
+  build_and_push_image:
+    if: false
+    needs:
+      - generate-timestamp
+      - build-website
+
+    runs-on: ubuntu-latest
+
+    # Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
+    env:
+      REGISTRY: docker.github.sfu.ca #ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
+
+    # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
+    permissions:
+      packages: write
+      
+    outputs:
+      tags: ${{ steps.meta.outputs.tags }}
+
+    steps:
+      # - name: Checkout repository
+      #   uses: actions/checkout@v4
+      # Uses the `docker/login-action` action to log in to the Container registry registry using the account and password that will publish the packages. Once published, the packages are scoped to the account defined here.
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      # This step uses [docker/metadata-action](https://github.com/docker/metadata-action#about) to extract tags and labels that will be applied to the specified image. The `id` "meta" allows the output of this step to be referenced in a subsequent step. The `images` value provides the base name for the tags and labels.
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/${{ env.SERVICE }}
+          labels: |
+            org.opencontainers.image.version=${{ needs.generate-timestamp.outputs.TIMESTAMP }}
+      # This step uses the `docker/build-push-action` action to build the image, based on your repository's `Dockerfile`. If the build succeeds, it pushes the image to GitHub Packages.
+      # It uses the `context` parameter to define the build's context as the set of files located in the specified path. For more information, see "[Usage](https://github.com/docker/build-push-action#usage)" in the README of the `docker/build-push-action` repository.
+      # It uses the `tags` and `labels` parameters to tag and label the image with the output from the "meta" step.
+      - name: Build and push Docker image
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  # Cleanup workspace on the runner
+  cleanup:
+    # if: ${{ always() }}
+    permissions: {}
+    needs: 
+      - build-website
+      - deploy-gh-pages
+      - build_and_push_image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Current workspace
+        run: du -shc ${GITHUB_WORKSPACE}
+      - name: Clean Up Docker Images
+        run: docker rmi -f $(docker images '${{ needs.build_and_push_image.outputs.tags }}' -a -q)
+      - name: Clean Up Workspace
+        run: rm -rf ${GITHUB_WORKSPACE}
